@@ -1,0 +1,7 @@
+{
+  "name": "Lumière Boutique Minimalista",
+  "description": "Uma plataforma elegante de e-commerce e gestão para boutiques de moda minimalista, com vitrine de produtos, detalhes exclusivos e painel administrativo completo.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
