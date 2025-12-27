@@ -1,9 +1,9 @@
 
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { generateProductDescription } from '../services/geminiService';
-import { steinService } from '../services/steinService';
-import { Category } from '../types';
+import { generateProductDescription } from '../services/geminiService.ts';
+import { steinService } from '../services/steinService.ts';
+import { Category } from '../types.ts';
 
 const AdminAddProduct: React.FC = () => {
   const navigate = useNavigate();
@@ -19,7 +19,6 @@ const AdminAddProduct: React.FC = () => {
   const [img3, setImg3] = useState('');
   const [img4, setImg4] = useState('');
   const [isPromotion, setIsPromotion] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = async () => {
@@ -32,7 +31,7 @@ const AdminAddProduct: React.FC = () => {
       category: category,
       price: price,
       oldPrice: oldPrice || "", 
-      image1: img1.trim(), // Ajustado para image1 para bater com a planilha
+      image1: img1.trim(),
       image2: img2.trim(),
       image3: img3.trim(),
       image4: img4.trim(),
@@ -44,21 +43,25 @@ const AdminAddProduct: React.FC = () => {
       isPromotion: isPromotion ? 'true' : 'false'
     };
 
-    const result = await steinService.addProduct(newProduct);
-    if (result.success) {
-      alert("Sucesso! Peça cadastrada com todas as imagens.");
-      navigate('/admin');
-    } else {
-      alert("Erro ao salvar. Verifique o console ou as colunas da sua planilha.");
+    try {
+      const result = await steinService.addProduct(newProduct);
+      if (result.success) {
+        alert("Sucesso! Peça cadastrada.");
+        navigate('/admin');
+      } else {
+        alert("Erro ao salvar: " + result.error);
+      }
+    } catch (error) {
+      alert("Falha de conexão.");
+    } finally {
+      setIsSaving(false);
     }
-    setIsSaving(false);
   };
 
   return (
     <div className="flex min-h-screen bg-slate-50 dark:bg-background-dark">
       <div className="fixed top-4 right-4 z-[60] flex gap-2">
         <Link to="/admin" className="bg-white shadow-lg px-4 py-2 rounded-full text-slate-600 font-bold text-sm">Voltar</Link>
-        <button onClick={() => navigate('/')} className="bg-white shadow-xl px-4 py-2 rounded-full text-red-500 font-bold text-sm">Sair</button>
       </div>
 
       <main className="flex-1 p-6 pt-24 max-w-5xl mx-auto">
@@ -92,7 +95,7 @@ const AdminAddProduct: React.FC = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <input type="number" value={price} onChange={e => setPrice(e.target.value)} placeholder="Preço Venda" className="w-full bg-slate-50 border-none rounded-xl h-12 px-4" />
-                  <input type="number" value={oldPrice} onChange={e => setOldPrice(e.target.value)} placeholder="Preço Original (Risco)" className="w-full bg-slate-50 border-none rounded-xl h-12 px-4" />
+                  <input type="number" value={oldPrice} onChange={e => setOldPrice(e.target.value)} placeholder="Preço Original" className="w-full bg-slate-50 border-none rounded-xl h-12 px-4" />
                 </div>
                 <textarea value={description} onChange={e => setDescription(e.target.value)} rows={4} placeholder="Descrição..." className="w-full bg-slate-50 border-none rounded-xl p-4 text-sm" />
               </div>
@@ -100,7 +103,7 @@ const AdminAddProduct: React.FC = () => {
           </div>
 
           <div className="bg-white dark:bg-white/5 p-8 rounded-3xl border border-slate-200 space-y-4">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 block mb-2">Imagens (Use URLs ou Base64)</label>
+            <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 block mb-2">Imagens (URLs)</label>
             <div className="grid grid-cols-1 gap-2 mb-4">
               <input value={img1} onChange={e => setImg1(e.target.value)} placeholder="URL Foto 1 (Capa)" className="text-xs bg-slate-50 border-none rounded-lg p-3" />
               <input value={img2} onChange={e => setImg2(e.target.value)} placeholder="URL Foto 2" className="text-xs bg-slate-50 border-none rounded-lg p-3" />
@@ -108,10 +111,10 @@ const AdminAddProduct: React.FC = () => {
               <input value={img4} onChange={e => setImg4(e.target.value)} placeholder="URL Foto 4" className="text-xs bg-slate-50 border-none rounded-lg p-3" />
             </div>
             <div className="grid grid-cols-4 gap-2 h-24">
-              <div className="bg-slate-100 rounded-lg overflow-hidden">{img1 && <img src={img1} className="w-full h-full object-cover" />}</div>
-              <div className="bg-slate-100 rounded-lg overflow-hidden">{img2 && <img src={img2} className="w-full h-full object-cover" />}</div>
-              <div className="bg-slate-100 rounded-lg overflow-hidden">{img3 && <img src={img3} className="w-full h-full object-cover" />}</div>
-              <div className="bg-slate-100 rounded-lg overflow-hidden">{img4 && <img src={img4} className="w-full h-full object-cover" />}</div>
+              <div className="bg-slate-100 rounded-lg overflow-hidden">{img1 && <img src={img1} className="w-full h-full object-cover" alt="Preview 1" />}</div>
+              <div className="bg-slate-100 rounded-lg overflow-hidden">{img2 && <img src={img2} className="w-full h-full object-cover" alt="Preview 2" />}</div>
+              <div className="bg-slate-100 rounded-lg overflow-hidden">{img3 && <img src={img3} className="w-full h-full object-cover" alt="Preview 3" />}</div>
+              <div className="bg-slate-100 rounded-lg overflow-hidden">{img4 && <img src={img4} className="w-full h-full object-cover" alt="Preview 4" />}</div>
             </div>
           </div>
         </div>

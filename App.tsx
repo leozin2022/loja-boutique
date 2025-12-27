@@ -1,12 +1,12 @@
 
 import React from 'react';
 import { HashRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import Home from './pages/Home';
-import Shop from './pages/Shop';
-import ProductDetail from './pages/ProductDetail';
-import Login from './pages/Login';
-import AdminDashboard from './pages/AdminDashboard';
-import AdminAddProduct from './pages/AdminAddProduct';
+import Home from './pages/Home.tsx';
+import Shop from './pages/Shop.tsx';
+import ProductDetail from './pages/ProductDetail.tsx';
+import Login from './pages/Login.tsx';
+import AdminDashboard from './pages/AdminDashboard.tsx';
+import AdminAddProduct from './pages/AdminAddProduct.tsx';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
@@ -23,11 +23,10 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               <span className="font-display font-bold text-2xl tracking-tight text-primary">BOUTIQUE.</span>
             </Link>
             
-            {/* Menu Centralizado e Funcional */}
             <div className="hidden md:flex space-x-10 items-center">
               <Link to="/" className="font-display text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary transition-colors">Início</Link>
               <Link to="/shop" className="font-display text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary transition-colors">Novidades</Link>
-              <a href="#/localizacao" className="font-display text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary transition-colors">Localização</a>
+              <Link to="/localizacao" className="font-display text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary transition-colors">Localização</Link>
             </div>
 
             <div className="flex items-center space-x-4">
@@ -41,42 +40,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       </nav>
       <main className="flex-grow">{children}</main>
       <footer className="bg-white dark:bg-background-dark border-t border-slate-100 dark:border-white/5 pt-16 pb-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-            <div className="col-span-1 md:col-span-1">
-              <span className="font-display font-bold text-2xl tracking-tight text-primary mb-4 block">BOUTIQUE.</span>
-              <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
-                Curadoria de moda minimalista para a mulher moderna. Encontre sua essência em cada detalhe.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-bold text-slate-900 dark:text-white mb-4 uppercase text-xs tracking-widest">Comprar</h4>
-              <ul className="space-y-2 text-sm text-slate-500 dark:text-slate-400">
-                <li><Link to="/shop" className="hover:text-primary transition-colors">Novidades</Link></li>
-                <li><Link to="/shop" className="hover:text-primary transition-colors">Mais Vendidos</Link></li>
-                <li><Link to="/shop" className="hover:text-primary transition-colors">Coleções</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold text-slate-900 dark:text-white mb-4 uppercase text-xs tracking-widest">Ajuda</h4>
-              <ul className="space-y-2 text-sm text-slate-500 dark:text-slate-400">
-                <li><a href="#" className="hover:text-primary transition-colors">Rastrear Pedido</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Guia de Tamanhos</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Contato</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold text-slate-900 dark:text-white mb-4 uppercase text-xs tracking-widest">Newsletter</h4>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">Receba novidades e 10% off.</p>
-              <div className="flex">
-                <input className="w-full bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 rounded-l-lg text-sm focus:ring-primary focus:border-primary" placeholder="Seu e-mail" type="email" />
-                <button className="bg-primary text-white px-4 rounded-r-lg hover:bg-primary/90 transition-colors">OK</button>
-              </div>
-            </div>
-          </div>
-          <div className="border-t border-slate-100 dark:border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-slate-400 dark:text-slate-500">© 2024 Lumière Boutique. Todos os direitos reservados.</p>
-          </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center md:text-left">
+           <p className="text-xs text-slate-400 dark:text-slate-500">© 2024 Lumière Boutique. Todos os direitos reservados.</p>
         </div>
       </footer>
     </div>
@@ -94,7 +59,6 @@ const App: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/add" element={<AdminAddProduct />} />
-          {/* Rota de compatibilidade para âncora de localização na home */}
           <Route path="/localizacao" element={<Home scrollTarget="localizacao" />} />
         </Routes>
       </Layout>

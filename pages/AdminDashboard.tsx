@@ -1,8 +1,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Product } from '../types';
-import { steinService } from '../services/steinService';
+import { Product } from '../types.ts';
+import { steinService } from '../services/steinService.ts';
 
 const AdminDashboard: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -35,9 +35,7 @@ const AdminDashboard: React.FC = () => {
       try {
         const result = await steinService.deleteProduct(id);
         if (result.success) {
-          // Remove da tela na hora
           setProducts(prev => prev.filter(p => p.id !== id));
-          console.log("Peça removida com sucesso!");
         } else {
           alert(`Não foi possível excluir: ${result.message}`);
         }
@@ -51,7 +49,6 @@ const AdminDashboard: React.FC = () => {
 
   return (
     <div className="flex min-h-screen bg-slate-50 dark:bg-background-dark text-slate-900 dark:text-white transition-colors">
-      {/* Top Bar Navigation */}
       <div className="fixed top-0 right-0 left-0 lg:left-72 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md h-16 border-b border-slate-100 dark:border-white/5 flex items-center justify-between px-6 z-40">
         <h3 className="font-bold text-xs text-slate-400 uppercase tracking-widest">Painel Administrativo</h3>
         <button 
@@ -63,7 +60,6 @@ const AdminDashboard: React.FC = () => {
         </button>
       </div>
 
-      {/* Sidebar */}
       <aside className="w-72 bg-white dark:bg-surface-dark border-r border-slate-200 dark:border-white/5 hidden lg:flex flex-col fixed h-screen z-50">
         <div className="p-8">
           <div className="flex items-center gap-3 mb-12">
@@ -78,10 +74,6 @@ const AdminDashboard: React.FC = () => {
               <span className="material-symbols-outlined icon-filled">inventory_2</span>
               Estoque Geral
             </Link>
-            <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 font-bold text-sm transition-all text-left cursor-not-allowed opacity-50">
-              <span className="material-symbols-outlined">analytics</span>
-              Relatórios
-            </button>
           </nav>
         </div>
         <div className="mt-auto p-8 border-t border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-black/10">

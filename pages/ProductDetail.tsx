@@ -1,8 +1,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { steinService } from '../services/steinService';
-import { Product } from '../types';
+import { steinService } from '../services/steinService.ts';
+import { Product } from '../types.ts';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -13,13 +13,18 @@ const ProductDetail: React.FC = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       setIsLoading(true);
-      const all = await steinService.getAllProducts();
-      const found = all.find(p => p.id === id);
-      if (found) {
-        setProduct(found);
-        setMainImage(found.image);
+      try {
+        const all = await steinService.getAllProducts();
+        const found = all.find(p => p.id === id);
+        if (found) {
+          setProduct(found);
+          setMainImage(found.image);
+        }
+      } catch (err) {
+        console.error("Erro ao carregar detalhes:", err);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
     fetchProduct();
   }, [id]);
@@ -32,12 +37,11 @@ const ProductDetail: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-        {/* Gallery */}
         <div className="lg:col-span-7 space-y-4">
           <div className="aspect-[4/5] bg-slate-100 rounded-2xl overflow-hidden relative">
             <img src={mainImage} className="w-full h-full object-cover" alt={product.name} />
             {product.isPromotion && (
-              <div className="absolute top-6 left-6 animate-pulse-soft">
+              <div className="absolute top-6 left-6">
                 <span className="bg-primary text-white text-[10px] font-black px-4 py-2 rounded-full shadow-xl">PROMOÇÃO DA SEMANA</span>
               </div>
             )}
@@ -49,13 +53,12 @@ const ProductDetail: React.FC = () => {
                 onClick={() => setMainImage(img || '')}
                 className={`aspect-square rounded-xl overflow-hidden border-2 transition-all ${mainImage === img ? 'border-primary' : 'border-transparent'}`}
               >
-                <img src={img} className="w-full h-full object-cover" />
+                <img src={img} className="w-full h-full object-cover" alt={`Miniatura ${idx}`} />
               </button>
             ))}
           </div>
         </div>
 
-        {/* Info */}
         <div className="lg:col-span-5 space-y-8">
           <div>
             <div className="flex justify-between items-center mb-4">

@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { steinService } from '../services/steinService';
-import { Category, Product } from '../types';
+import { steinService } from '../services/steinService.ts';
+import { Category, Product } from '../types.ts';
 
 const Shop: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>(Category.ALL);
@@ -12,9 +12,14 @@ const Shop: React.FC = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       setIsLoading(true);
-      const data = await steinService.getAllProducts();
-      setProducts(data);
-      setIsLoading(false);
+      try {
+        const data = await steinService.getAllProducts();
+        setProducts(data);
+      } catch (err) {
+        console.error("Erro ao carregar loja:", err);
+      } finally {
+        setIsLoading(false);
+      }
     };
     fetchProducts();
   }, []);
@@ -47,18 +52,16 @@ const Shop: React.FC = () => {
           {filteredProducts.map(p => (
             <Link key={p.id} to={`/product/${p.id}`} className="group bg-white dark:bg-white/5 rounded-3xl overflow-hidden border border-slate-100 dark:border-white/5 hover:shadow-2xl transition-all relative">
               <div className="aspect-[3/4] relative overflow-hidden">
-                <img src={p.image} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <img src={p.image} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={p.name} />
                 
-                {/* Selo de Promoção Redesenhado */}
                 {p.isPromotion && (
                   <div className="absolute top-4 left-4 z-10">
-                    <div className="bg-primary bg-gradient-to-r from-primary to-primary-hover text-white text-[10px] font-black px-4 py-1.5 rounded-full shadow-lg shadow-primary/40 animate-pulse-soft border border-white/20">
+                    <div className="bg-primary bg-gradient-to-r from-primary to-primary-hover text-white text-[10px] font-black px-4 py-1.5 rounded-full shadow-lg shadow-primary/40 border border-white/20">
                       PROMOÇÃO
                     </div>
                   </div>
                 )}
 
-                {/* Selo de Novo (Aparece se não for promoção) */}
                 {p.isNew && !p.isPromotion && (
                   <div className="absolute top-4 left-4 z-10 bg-black/80 backdrop-blur-md text-white text-[9px] font-black px-3 py-1.5 rounded-full border border-white/10">
                     NOVO
