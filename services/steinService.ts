@@ -1,5 +1,5 @@
 
-import { Product } from '../types';
+import { Product } from '../types.ts';
 
 const STORAGE_ID = '694f0f9faffba40a622ff95e';
 const SHEET_NAME = 'Página1'; 
@@ -17,10 +17,12 @@ export const steinService = {
       const data = await response.json();
       if (!Array.isArray(data)) return [];
 
-      return data.map((item: any) => ({
+      // FILTRO CRÍTICO: Remove linhas que não têm ID ou Nome (evita cards vazios)
+      const validRows = data.filter((item: any) => item.id && item.name && item.id.trim() !== "");
+
+      return validRows.map((item: any) => ({
         ...item,
-        // O ID vindo da planilha (Coluna A na sua imagem)
-        id: item.id || `temp-${Math.random()}`,
+        id: item.id,
         image: item.image1 || item.image || '', 
         price: Number(item.price) || 0,
         oldPrice: item.oldPrice ? Number(item.oldPrice) : undefined,
